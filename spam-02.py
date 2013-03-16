@@ -12,15 +12,13 @@ import nltk.classify.util
 from nltk.classify import NaiveBayesClassifier
 from nltk import tokenize
 from nltk import metrics
-
 #
 # Take a list of words and turn it into a Bag Of Words
 #
 def bag_of_words(words):
     return dict([(word, True) for word in words])
-
+#
 start_time = time.clock()
-
 #
 # Data
 #
@@ -61,7 +59,6 @@ for directory in directories:
     print "%s %s Total Files = %d Feature Count = %d" % (directory, label, tot_files, len(spam_features))
 read_time = time.clock()
 print "Read Time : %1.3f" % (read_time-start_time)
-
 #
 # Now ceate the training and test data sets
 #
@@ -71,12 +68,16 @@ spam_cutoff=len(spam_features) * 9/10 # 3/4
 # print spam_features[0]
 # print ham_features[1]
 # print spam_features[1]
-
+#
 trainfeats = ham_features[:ham_cutoff] + spam_features[:spam_cutoff]
 testfeats = ham_features[ham_cutoff:] + spam_features[spam_cutoff:]
 print 'Train on %d instances, Test on %d instances' % (len(trainfeats), len(testfeats))
-
+#
+# Train the Dragon
+#
 classifier = NaiveBayesClassifier.train(trainfeats)
+#
+# Now create the data structure for model evaluation
 #
 refsets = collections.defaultdict(set)
 testsets = collections.defaultdict(set)
@@ -92,28 +93,38 @@ recalls = {}
 for label in classifier.labels():
     precisions[label] = metrics.precision(refsets[label],testsets[label])
     recalls[label] = metrics.recall(refsets[label], testsets[label])
+#
+# Let us calculate Precision & Recall and compare with nltk
+#
+# Luckily the data structures are symmetric
+#
 c_00=len(refsets[labels[0]].intersection(testsets[labels[0]]))
 c_01=len(refsets[labels[0]].intersection(testsets[labels[1]]))
 c_10=len(refsets[labels[1]].intersection(testsets[labels[0]]))
 c_11=len(refsets[labels[1]].intersection(testsets[labels[1]]))
+#
 print '  |   H   |   S   |'
 print '--|-------|-------|'
 print 'H | %5d | %5d |' % (c_00,c_01)
 print '--|-------|-------|'
 print 'S | %5d | %5d |' % (c_10,c_11)
 print '--|-------|-------|'
-
+#
 ham_p = float(c_00) / (c_00 + c_10)
 ham_r = float(c_00) / (c_00 + c_01)
 spam_p = float(c_11) / (c_01 + c_11)
 spam_r = float(c_11) / (c_10 + c_11)
-
+#
 print 'P:{ham:%f,spam:%f}' % (ham_p,spam_p)
 print 'R:{ham:%f,spam:%f}' % (ham_r,spam_r)
-
+#
 print '(nltk)P:',precisions
 print '(nltk)R:',recalls
-
+#
+# They are the same !
+#
+# Some sample outputs as illustrations
+#
 """ Sample Output
 Run 1:
 

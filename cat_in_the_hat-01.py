@@ -41,9 +41,9 @@ I would not eat green eggs and ham."
 #
 # For testing classification
 #
-classify_1 = "We saw the cat in the house."
-classify_2 = "And I will eat them in a house."
-classify_3 = "A man a plan a canal Panama!"
+classify_cith = "We saw the cat in the house."
+classify_geah = "And I will eat them in a house."
+classify_other = "A man a plan a canal Panama!"
 #
 # Take a list of words and turn it into a Bag Of Words
 #
@@ -78,9 +78,9 @@ print 'Accuracy : %d' % nltk.classify.util.accuracy(classifier, test_features)
 #
 # Step 3 :Test Classification
 #
-print classifier.classify(bag_of_words(tokenize.word_tokenize(classify_1)))
-print classifier.classify(bag_of_words(tokenize.word_tokenize(classify_2)))
-print classifier.classify(bag_of_words(tokenize.word_tokenize(classify_3)))
+print classifier.classify(bag_of_words(tokenize.word_tokenize(classify_cith)))
+print classifier.classify(bag_of_words(tokenize.word_tokenize(classify_geah)))
+print classifier.classify(bag_of_words(tokenize.word_tokenize(classify_other)))
 #
 # That's all Folks!
 #
